@@ -34,13 +34,13 @@ return {
 					"dockerfile",
 					"properties",
 				},
-                sync_install = true,
-                ignore_install = {},
-                modules = {},
-                auto_install = true,
+				sync_install = true,
+				ignore_install = {},
+				modules = {},
+				auto_install = true,
 				highlight = {
 					enable = true,
-                    additional_vim_regex_highlighting = true,
+					additional_vim_regex_highlighting = true,
 				},
 				indent = {
 					enable = true,
@@ -65,26 +65,28 @@ return {
 						},
 					},
 				},
-                rainbow = {
-                    enable = true,
-                    extended_mode = true,
-                    max_file_lines = 10000,
-                },
-            })
+				rainbow = {
+					enable = true,
+					extended_mode = true,
+					max_file_lines = 10000,
+				},
+			})
+
+			vim.treesitter.language.register("html", "ejs")
 		end,
 	},
-    {
-        "nvim-treesitter/nvim-treesitter-context",
-        opts = {
-            enable = true,
-            max_lines = 0,
-            min_window_height = 0,
-            line_numbers = true,
-            multiline_threshold = 5,
-            trim_scope = "outer",
-            mode = "cursor",
-            zindex = 20,
-            on_attach = nil,
-        }
-    }
+	{
+		"nvim-treesitter/nvim-treesitter-context",
+		opts = {
+			enable = true,
+			max_lines = 0,
+			min_window_height = 0,
+			line_numbers = true,
+			multiline_threshold = 5,
+			trim_scope = "outer",
+			mode = "cursor",
+			zindex = 20,
+			on_attach = nil,
+		},
+	},
 }
