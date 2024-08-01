@@ -36,12 +36,7 @@ return {
 			require("fidget").setup()
 			-- TODO: this requires extensive setup.....
 			require("jdtls")
-			require("crates").setup({
-				event = "BufRead Cargo.toml",
-				config = function()
-					require("crates").setup({})
-				end,
-			})
+			require("crates").setup({})
 			require("rust-tools").setup()
 
 			local map = require("utils.keymaps").map

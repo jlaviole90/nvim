@@ -6,10 +6,10 @@ return {
 				formatters_by_ft = {
 					lua = { "stylua" },
 					go = { "gofumpt", "goimports", "golines", "gci" },
-					javascript = { { "prettier" } },
-					typescript = { { "prettier" } },
-					html = { { "prettier" } },
-					css = { { "prettier" }, "stylelint" },
+					javascript = { "prettier" },
+					typescript = { "prettier" },
+					html = { "prettier" },
+					css = { "prettier", "stylelint" },
 					python = { "black" },
 					c = { "clang_format" },
 					cpp = { "clang_format" },
@@ -85,7 +85,8 @@ return {
 				require("conform").format({ async = true, lsp_fallback = true, range = range })
 			end, { range = true })
 
-			map("n", "<F10>", "<Cmd>Format<CR><Cmd>OrganizeImports<CR>", "Format and organize imports (JS only)")
+			map("n", "<F10>", "<Cmd>Format<CR>", "Format")
+			map("n", "<F10><F10>", "<Cmd>OrganizeImports<CR>", "Organize imports (JS only)")
 		end,
 	},
 }
