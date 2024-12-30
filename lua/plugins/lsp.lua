@@ -111,7 +111,7 @@ return {
 			lspconfig.pyright.setup({ capabilities = capabilities, on_attach = on_attach })
 			lspconfig.rust_analyzer.setup({ capabilities = capabilities, on_attach = on_attach })
 			lspconfig.sqlls.setup({ capabilities = capabilities, on_attach = on_attach })
-            lspconfig.c3_lsp.setup({ capabilities = capabilities, on_attach = on_attach })
+            lspconfig.c3_lsp.setup({ capabilities = capabilities, on_attach = on_attach, filetypes = { "c3" }})
 
 			lspconfig.html.setup({
 				capabilities = capabilities,
