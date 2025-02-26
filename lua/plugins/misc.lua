@@ -4,7 +4,7 @@ return {
 	"nvim-lua/plenary.nvim",
 	"MunifTanjim/nui.nvim",
 	"3rd/image.nvim",
-	"github/copilot.vim",
+	--"github/copilot.vim",
     {
         "christoomey/vim-tmux-navigator",
         cmd = {
