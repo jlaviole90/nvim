@@ -1,7 +1,7 @@
 local opts = {
 	shiftwidth = 4,
 	tabstop = 4,
-	expandtab = true,
+    expandtab = true,
 	wrap = false,
 	termguicolors = true,
 	number = true,
@@ -11,6 +11,11 @@ local opts = {
 for opt, val in pairs(opts) do
 	vim.o[opt] = val
 end
+
+vim.o["shiftwidth"] = 4
+vim.o["tabstop"] = 4
+vim.opt.tabstop = 4
+vim.opt.shiftwidth = 4
 
 local theme = require("utils.theme")
 vim.cmd.colorscheme(theme)
