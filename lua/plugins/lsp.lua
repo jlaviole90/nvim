@@ -1,4 +1,51 @@
 return {
+    "mfussenegger/nvim-dap",
+	{
+		"nvim-java/nvim-java",
+		config = false,
+		dependencies = {
+			"neovim/nvim-lspconfig",
+			opts = {
+				servers = {
+					jdtls = {
+						settings = {
+							java = {
+								configuration = {
+									runtimes = {
+										{
+											name = "JavaSE-23",
+											path = "/Users/joshualaviolette/.sdkman/candidates/java/23-open/",
+											default = true,
+										},
+										{
+											name = "JavaSE-17",
+											path = "/Users/joshualaviolette/.sdkman/candidates/java/17-open/",
+											default = false,
+										},
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+			setup = {
+				jdtls = function()
+					require("java").setup({
+						root_markers = {
+							"settings.gradle",
+							"settings.gradle.kts",
+							"build.gradle",
+							"build.gradle.kts",
+							"gradlew",
+							"pom.xml",
+							"mvnw",
+						},
+					})
+				end,
+			},
+		},
+	},
 	{
 		"neovim/nvim-lspconfig",
 		dependencies = {
@@ -28,6 +75,8 @@ return {
 				},
 			})
 
+			require("java").setup({})
+
 			require("mason-lspconfig").setup({
 				automatic_installation = true,
 			})
@@ -35,12 +84,33 @@ return {
 			require("neodev").setup()
 			require("fidget").setup()
 			-- TODO: this requires extensive setup.....
-			require("jdtls")
 			require("crates").setup({})
 			require("rust-tools").setup()
 
 			local map = require("utils.keymaps").map
 			map("n", "<leader>M", "<Cmd>Mason<CR>", "Show Mason")
+
+            vim.keymap.set('n', '<F1>', "<Cmd>JavaRunnerRunMain<Cr>", {silent = false})
+
+            vim.keymap.set('n', '<F2>', function()
+                require('java').runner.built_in.stop_app()
+                vim.cmd("quit")
+            end, {silent = false})
+
+            vim.keymap.set('n', '<F3>', "<Cmd>JavaTestRunCurrentMethod<Cr>", {silent = false})
+
+            --[[
+            local dap = require("dap")
+            vim.keymap.set('n', '<F4>', function()
+                require("dap").toggle_breakpoint()
+            end, {silent = false})
+            vim.keymap.set('n', '<F5>', function()
+                require("dap").step_over()
+            end, {silent = false})
+            vim.keymap.set('n', '<F6>', function()
+                require("dap").step_into()
+            end, {silent = false})
+            ]]--
 
 			local signs = { Error = " ", Warn = " ", Hint = " ", Info = " " }
 			for type, icon in pairs(signs) do
@@ -93,9 +163,10 @@ return {
 				require("illuminate").on_attach(client)
 			end
 
+
 			local capabilities = vim.lsp.protocol.make_client_capabilities()
 			capabilities = require("cmp_nvim_lsp").default_capabilities(capabilities)
-            capabilities.textDocument.completion.completionItem.snippetSupport = true
+			capabilities.textDocument.completion.completionItem.snippetSupport = true
 
 			local lspconfig = require("lspconfig")
 			lspconfig.clangd.setup({ capabilities = capabilities, on_attach = on_attach })
@@ -111,7 +182,7 @@ return {
 			lspconfig.pyright.setup({ capabilities = capabilities, on_attach = on_attach })
 			lspconfig.rust_analyzer.setup({ capabilities = capabilities, on_attach = on_attach })
 			lspconfig.sqlls.setup({ capabilities = capabilities, on_attach = on_attach })
-            lspconfig.c3_lsp.setup({ capabilities = capabilities, on_attach = on_attach, filetypes = { "c3" }})
+			lspconfig.c3_lsp.setup({ capabilities = capabilities, on_attach = on_attach, filetypes = { "c3" } })
 
 			lspconfig.html.setup({
 				capabilities = capabilities,
@@ -126,6 +197,8 @@ return {
 					},
 				},
 			})
+
+			--require("lspconfig").jdtls.setup({})
 
 			-- Lua
 			require("lspconfig")["lua_ls"].setup({
@@ -191,16 +264,16 @@ return {
 		end,
 		autoformat = true,
 	},
-    {
-        "supermaven-inc/supermaven-nvim",
-        config = function()
-            require("supermaven-nvim").setup({
-                keymaps = {
-                    accept_suggestion = "<S-Tab>",
-                    clear_suggestion = "<C-Tab>",
-                    accept_word = "<C-Space>",
-                }
-            })
-        end,
-    }
+	{
+		"supermaven-inc/supermaven-nvim",
+		config = function()
+			require("supermaven-nvim").setup({
+				keymaps = {
+					accept_suggestion = "<S-Tab>",
+					clear_suggestion = "<C-Tab>",
+					accept_word = "<C-Space>",
+				},
+			})
+		end,
+	},
 }

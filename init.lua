@@ -1,3 +1,7 @@
+vim.g.loaded_netrw = 1
+vim.g.loaded_netrwPlugin = 1
+vim.opt.termguicolors = true
+
 require("core.lazy")
 
 require("utils.keymaps")
@@ -14,8 +18,8 @@ vim.filetype.add({
   },
 })
 
-local parser_config = require "nvim-treesitter.parsers".get_parser_configs()
-parser_config.c3 = {
+require("nvim-treesitter.parsers").get_parser_configs()
+require("nvim-treesitter.parsers").c3 = {
   install_info = {
     url = "https://github.com/c3lang/tree-sitter-c3",
     files = {"src/parser.c", "src/scanner.c"},
