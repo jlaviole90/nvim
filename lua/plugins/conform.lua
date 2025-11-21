@@ -6,10 +6,17 @@ return {
 				formatters_by_ft = {
 					lua = { "stylua" },
 					go = { "gofumpt", "goimports", "golines", "gci" },
-					javascript = { "prettierd" },
-					typescript = { "prettierd" },
-					html = { "prettierd" },
-					css = { "prettierd", "stylelint" },
+					javascript = { "prettier" },
+					typescript = { "prettier" },
+					typescriptreact = { "prettier" },
+					javascriptreact = { "prettier" },
+					html = { "prettier" },
+					ejs = { "prettier" },
+					css = { "prettier", "stylelint" },
+					scss = { "prettier" },
+					json = { "prettier" },
+					jsonc = { "prettier" },
+					markdown = { "prettier" },
 					python = { "black" },
 					c = { "clang_format" },
 					cpp = { "clang_format" },
@@ -46,9 +53,9 @@ return {
 					google_java_format = {
 						command = "java",
 					},
-					prettierd = {
-						command = "prettierd",
-					},
+                    prettier = {
+                        command = "prettier",
+                    },
 					rustfmt = {
 						command = "rustfmt",
 					},
@@ -71,14 +78,6 @@ return {
 				notify_on_error = true,
 			})
 
-            local conform = require("conform")
-            conform.formatters.pretterd = {
-                formatCommand = 'prettierd ${INPUT}',
-                formatStdin = true,
-                env = {
-                    string.format('PRETTIERD_DEFAULT_CONFIG=%s', vim.fn.expand("~/.config/nvim/lua/utils/.prettierrc")),
-                }
-            }
             local map = require("utils.keymaps").map
 
 			vim.api.nvim_create_user_command("Format", function(args)
@@ -94,7 +93,7 @@ return {
 			end, { range = true })
 
 			map("n", "<F10>", "<Cmd>Format<CR>", "Format")
-			map("n", "<F10><F10>", "<Cmd>OrganizeImports<CR>", "Organize imports (JS only)")
+			map("n", "<F10><F10>", "<Cmd>OrganizeImports<CR>", "Organize imports (TS/JS)")
 		end,
 	},
 }

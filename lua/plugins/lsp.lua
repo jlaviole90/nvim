@@ -1,56 +1,21 @@
 return {
-    "mfussenegger/nvim-dap",
-	{
-		"nvim-java/nvim-java",
-		config = false,
-		dependencies = {
-			"neovim/nvim-lspconfig",
-			opts = {
-				servers = {
-					jdtls = {
-						settings = {
-							java = {
-								configuration = {
-									runtimes = {
-										{
-											name = "JavaSE-23",
-											path = "/Users/joshualaviolette/.sdkman/candidates/java/23-open/",
-											default = true,
-										},
-										{
-											name = "JavaSE-17",
-											path = "/Users/joshualaviolette/.sdkman/candidates/java/17-open/",
-											default = false,
-										},
-									},
-								},
-							},
-						},
-					},
-				},
-			},
-			setup = {
-				jdtls = function()
-					require("java").setup({
-						root_markers = {
-							"settings.gradle",
-							"settings.gradle.kts",
-							"build.gradle",
-							"build.gradle.kts",
-							"gradlew",
-							"pom.xml",
-							"mvnw",
-						},
-					})
-				end,
-			},
-		},
-	},
 	{
 		"neovim/nvim-lspconfig",
 		dependencies = {
-			"williamboman/mason.nvim",
-			"williamboman/mason-lspconfig.nvim",
+			{
+				"mason-org/mason.nvim",
+				config = function()
+					require("mason").setup()
+				end,
+			},
+			{
+				"mason-org/mason-lspconfig.nvim",
+				after = { "mason.nvim", "nvim-lspconfig" },
+				dependencies = { "neovim/nvim-lspconfig" },
+				config = function()
+					require("mason-lspconfig")
+				end,
+			},
 			{
 				"j-hui/fidget.nvim",
 				tag = "legacy",
@@ -61,7 +26,6 @@ return {
 			"hrsh7th/cmp-nvim-lsp",
 			"simrat39/rust-tools.nvim",
 			"joeveiga/ng.nvim",
-			"mfussenegger/nvim-jdtls",
 			"saecki/crates.nvim",
 		},
 		config = function()
@@ -75,42 +39,13 @@ return {
 				},
 			})
 
-			require("java").setup({})
-
-			require("mason-lspconfig").setup({
-				automatic_installation = true,
-			})
-
 			require("neodev").setup()
 			require("fidget").setup()
-			-- TODO: this requires extensive setup.....
 			require("crates").setup({})
 			require("rust-tools").setup()
 
 			local map = require("utils.keymaps").map
 			map("n", "<leader>M", "<Cmd>Mason<CR>", "Show Mason")
-
-            vim.keymap.set('n', '<F1>', "<Cmd>JavaRunnerRunMain<Cr>", {silent = false})
-
-            vim.keymap.set('n', '<F2>', function()
-                require('java').runner.built_in.stop_app()
-                vim.cmd("quit")
-            end, {silent = false})
-
-            vim.keymap.set('n', '<F3>', "<Cmd>JavaTestRunCurrentMethod<Cr>", {silent = false})
-
-            --[[
-            local dap = require("dap")
-            vim.keymap.set('n', '<F4>', function()
-                require("dap").toggle_breakpoint()
-            end, {silent = false})
-            vim.keymap.set('n', '<F5>', function()
-                require("dap").step_over()
-            end, {silent = false})
-            vim.keymap.set('n', '<F6>', function()
-                require("dap").step_into()
-            end, {silent = false})
-            ]]--
 
 			local signs = { Error = " ", Warn = " ", Hint = " ", Info = " " }
 			for type, icon in pairs(signs) do
@@ -163,28 +98,39 @@ return {
 				require("illuminate").on_attach(client)
 			end
 
-
 			local capabilities = vim.lsp.protocol.make_client_capabilities()
 			capabilities = require("cmp_nvim_lsp").default_capabilities(capabilities)
 			capabilities.textDocument.completion.completionItem.snippetSupport = true
 
-			local lspconfig = require("lspconfig")
-			lspconfig.clangd.setup({ capabilities = capabilities, on_attach = on_attach })
-			lspconfig.cmake.setup({ capabilities = capabilities, on_attach = on_attach })
-			lspconfig.csharp_ls.setup({ capabilities = capabilities, on_attach = on_attach })
-			lspconfig.cssls.setup({ capabilities = capabilities, on_attach = on_attach })
-			lspconfig.dockerls.setup({ capabilities = capabilities, on_attach = on_attach })
-			lspconfig.dotls.setup({ capabilities = capabilities, on_attach = on_attach })
-			lspconfig.golangci_lint_ls.setup({ capabilities = capabilities, on_attach = on_attach })
-			lspconfig.gopls.setup({ capabilities = capabilities, on_attach = on_attach })
-			lspconfig.jdtls.setup({ capabilities = capabilities, on_attach = on_attach })
-			lspconfig.jsonls.setup({ capabilities = capabilities, on_attach = on_attach })
-			lspconfig.pyright.setup({ capabilities = capabilities, on_attach = on_attach })
-			lspconfig.rust_analyzer.setup({ capabilities = capabilities, on_attach = on_attach })
-			lspconfig.sqlls.setup({ capabilities = capabilities, on_attach = on_attach })
-			lspconfig.c3_lsp.setup({ capabilities = capabilities, on_attach = on_attach, filetypes = { "c3" } })
+			vim.lsp.enable("clangd")
+			vim.lsp.config("clangd", { capabilities = capabilities, on_attach = on_attach })
+			vim.lsp.enable("cmake")
+			vim.lsp.config("cmake", { capabilities = capabilities, on_attach = on_attach })
+			vim.lsp.enable("csharp_ls")
+			vim.lsp.config("csharp_ls", { capabilities = capabilities, on_attach = on_attach })
+			vim.lsp.enable("cssls")
+			vim.lsp.config("cssls", { capabilities = capabilities, on_attach = on_attach })
+			vim.lsp.enable("dockerls")
+			vim.lsp.config("dockerls", { capabilities = capabilities, on_attach = on_attach })
+			vim.lsp.enable("dotls")
+			vim.lsp.config("dotls", { capabilities = capabilities, on_attach = on_attach })
+			vim.lsp.enable("golangci_lint_ls")
+			vim.lsp.config("golangci_lint_ls", { capabilities = capabilities, on_attach = on_attach })
+			vim.lsp.enable("gopls")
+			vim.lsp.config("gopls", { capabilities = capabilities, on_attach = on_attach })
+			vim.lsp.enable("jsonls")
+			vim.lsp.config("jsonls", { capabilities = capabilities, on_attach = on_attach })
+			vim.lsp.enable("pyright")
+			vim.lsp.config("pyright", { capabilities = capabilities, on_attach = on_attach })
+			vim.lsp.enable("rust_analyzer")
+			vim.lsp.config("rust_analyzer", { capabilities = capabilities, on_attach = on_attach })
+			vim.lsp.enable("sqlls")
+			vim.lsp.config("sqlls", { capabilities = capabilities, on_attach = on_attach })
+			vim.lsp.enable("c3_lsp")
+			vim.lsp.config("c3_lsp", { capabilities = capabilities, on_attach = on_attach, filetypes = { "c3" } })
 
-			lspconfig.html.setup({
+			vim.lsp.enable("html")
+			vim.lsp.config("html", {
 				capabilities = capabilities,
 				on_attach = on_attach,
 				filetypes = { "html", "ejs" },
@@ -198,10 +144,9 @@ return {
 				},
 			})
 
-			--require("lspconfig").jdtls.setup({})
-
 			-- Lua
-			require("lspconfig")["lua_ls"].setup({
+			vim.lsp.enable("lua_ls")
+			vim.lsp.config("lua_ls", {
 				on_attach = on_attach,
 				capabilities = capabilities,
 				settings = {
@@ -223,7 +168,8 @@ return {
 			})
 
 			-- Css Modules
-			require("lspconfig")["cssmodules_ls"].setup({
+			vim.lsp.enable("cssmodules_ls")
+			vim.lsp.config("cssmodules_ls", {
 				on_attach = function(client)
 					client.server_capabilities.definitionProvider = false
 					on_attach(client)
@@ -236,26 +182,25 @@ return {
 			})
 
 			-- TS Server
-			require("lspconfig")["ts_ls"].setup({
-				on_attach = on_attach,
+			vim.lsp.enable("ts_ls")
+			vim.lsp.config("ts_ls", {
+				on_attach = function(client, bufnr)
+					on_attach(client, bufnr)
+					vim.api.nvim_buf_create_user_command(bufnr, "OrganizeImports", function()
+						local params = {
+							command = "_typescript.organizeImports",
+							arguments = { vim.api.nvim_buf_get_name(0) },
+							title = "",
+						}
+						vim.lsp.buf.execute_command(params)
+					end, { desc = "Organize imports (TypeScript)" })
+				end,
 				capabilities = capabilities,
-				commands = {
-					OrganizeImports = {
-						function()
-							local params = {
-								command = "_typescript.organizeImports",
-								arguments = { vim.api.nvim_buf_get_name(0) },
-								title = "",
-							}
-							vim.lsp.buf.execute_command(params)
-						end,
-						description = "Organize Imports",
-					},
-				},
 			})
 
 			-- Angular
-			require("lspconfig")["angularls"].setup({
+			vim.lsp.enable("angularls")
+			vim.lsp.config("angularls", {
 				on_attach = on_attach,
 				capabilities = capabilities,
 				-- TODO: setup for template jumping
